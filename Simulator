@@ -17,3 +17,8 @@ class Asset:
         self.recovery_days = recovery_days
 
         self.dependencies = []
+tsmc.dependencies = [
+    power_grid,
+    water_system,
+    internet_network
+]
