@@ -1,33 +1,19 @@
-Power:
-- Nuclear Plant
-- Coal Plant
-- Gas Plant
-- Transformer
-- Substation
 
-Water:
-- Reservoir
-- Treatment Plant
-- Pump Station
+class Asset:
 
-Transport:
-- Port
-- Airport
-- Rail Hub
-- Highway Junction
+    def __init__(
+        self,
+        name,
+        asset_type,
+        status="operational",
+        resilience=100,
+        recovery_days=1
+    ):
 
-Military:
-- Radar Station
-- Air Base
-- Naval Base
-- Army Brigade
+        self.name = name
+        self.asset_type = asset_type
+        self.status = status
+        self.resilience = resilience
+        self.recovery_days = recovery_days
 
-Economy:
-- Bank
-- Stock Exchange
-- TSMC Fab
-
-Society:
-- Hospital
-- Supermarket
-- Population Centre
+        self.dependencies = []
