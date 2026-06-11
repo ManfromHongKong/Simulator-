@@ -245,7 +245,4 @@ def run_simulation(days):
 # ---------------------------------------------------
 # EXECUTION
 # ---------------------------------------------------
-if __name__ == "__main__":
-    # Test execution simulating a critical kinetic strike cascading across infrastructure
-    apply_event(MISSILE_STRIKE, [nuclear_plant, coal_plant, gas_plant])
-    run_simulation(5)
+
