@@ -17,6 +17,7 @@ if st.button("Trigger Missile Strike"):
 if st.button("Run Next Day"):
     country.day += 1
     run_day()
+    st.rerun()  # <--- THIS IS THE KEY!
 
 # 4. Create a Dataframe for the table
 # This turns your 'Asset' objects into a format Streamlit can draw
