@@ -1,5 +1,5 @@
 class Asset:
-    def __init__(self, name, sector, resilience=100, repair_days=5):
+    def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
         self.name = name
         self.sector = sector
         self.resilience = resilience
@@ -11,6 +11,8 @@ class Asset:
         self.resources = {}
         # TSMC specific
         self.water_reserve_days = None
+        # Added for GDP calculation
+        self.contribution = contribution
 
     def add_dependency(self, asset):
         self.dependencies.append(asset)
@@ -35,47 +37,56 @@ class Country:
         self.chip_output = 100
         self.gdp_loss = 0
 
+    def calculate_gdp(self):
+        # Calculate sum of contributions for all operational assets
+        # Only assets with status "Operational" contribute to GDP
+        total_gdp = sum(asset.contribution for asset in self.assets if asset.status == "Operational")
+        return total_gdp
+
     def add_asset(self, asset):
         self.assets.append(asset)
 
 # ---------------------------------------------------
 # CREATE COUNTRY
 # ---------------------------------------------------
+# ---------------------------------------------------
+# CREATE COUNTRY AND ASSETS
+# ---------------------------------------------------
 country = Country()
 
-# POWER
-nuclear_plant = Asset("Nuclear Plant", "Power")
-coal_plant = Asset("Coal Plant", "Power")
-gas_plant = Asset("Gas Plant", "Power")
-transformer = Asset("Transformer", "Power")
-substation = Asset("Substation", "Power")
+# POWER (Weight 10-20)
+nuclear_plant = Asset("Nuclear Plant", "Power", 100, 5, 20)
+coal_plant = Asset("Coal Plant", "Power", 100, 5, 15)
+gas_plant = Asset("Gas Plant", "Power", 100, 5, 15)
+transformer = Asset("Transformer", "Power", 100, 5, 10)
+substation = Asset("Substation", "Power", 100, 5, 10)
 
-# WATER
-reservoir = Asset("Reservoir", "Water")
-treatment_plant = Asset("Treatment Plant", "Water")
-pump_station = Asset("Pump Station", "Water")
+# WATER (Weight 5)
+reservoir = Asset("Reservoir", "Water", 100, 5, 5)
+treatment_plant = Asset("Treatment Plant", "Water", 100, 5, 5)
+pump_station = Asset("Pump Station", "Water", 100, 5, 5)
 
-# TRANSPORT
-port = Asset("Port", "Transport")
-airport = Asset("Airport", "Transport")
-rail_hub = Asset("Rail Hub", "Transport")
-highway_junction = Asset("Highway Junction", "Transport")
+# TRANSPORT (Weight 5-10)
+port = Asset("Port", "Transport", 100, 5, 10)
+airport = Asset("Airport", "Transport", 100, 5, 10)
+rail_hub = Asset("Rail Hub", "Transport", 100, 5, 5)
+highway_junction = Asset("Highway Junction", "Transport", 100, 5, 5)
 
-# MILITARY
-radar_station = Asset("Radar Station", "Military")
-air_base = Asset("Air Base", "Military")
-naval_base = Asset("Naval Base", "Military")
-army_brigade = Asset("Army Brigade", "Military")
+# MILITARY (Weight 5-10)
+radar_station = Asset("Radar Station", "Military", 100, 5, 5)
+air_base = Asset("Air Base", "Military", 100, 5, 10)
+naval_base = Asset("Naval Base", "Military", 100, 5, 10)
+army_brigade = Asset("Army Brigade", "Military", 100, 5, 10)
 
-# ECONOMY
-bank = Asset("Bank", "Finance")
-stock_exchange = Asset("Stock Exchange", "Finance")
-tsmc = Asset("TSMC Fab", "Industry")
+# ECONOMY (Weight 15-30)
+bank = Asset("Bank", "Finance", 100, 5, 15)
+stock_exchange = Asset("Stock Exchange", "Finance", 100, 5, 15)
+tsmc = Asset("TSMC Fab", "Industry", 100, 5, 30)
 
-# SOCIETY
-hospital = Asset("Hospital", "Health")
-supermarket = Asset("Supermarket", "Food")
-population_centre = Asset("Population Centre", "Society")
+# SOCIETY (Weight 5)
+hospital = Asset("Hospital", "Health", 100, 5, 5)
+supermarket = Asset("Supermarket", "Food", 100, 5, 5)
+population_centre = Asset("Population Centre", "Society", 100, 5, 5)
 
 all_assets = [
     nuclear_plant, coal_plant, gas_plant, transformer, substation,
@@ -88,7 +99,6 @@ all_assets = [
 
 for asset in all_assets:
     country.add_asset(asset)
-
 # ---------------------------------------------------
 # RESOURCES & RESERVES
 # ---------------------------------------------------
@@ -235,12 +245,11 @@ def run_day():
     update_tsmc_water()
     update_resources()
     update_outcomes()
+    
+    # Add this line to update the GDP loss at the end of every day:
+    country.gdp_loss = 100 - country.calculate_gdp()
+    
     report()
-
-def run_simulation(days):
-    for day in range(1, days + 1):
-        country.day = day
-        run_day()
 
 # ---------------------------------------------------
 # EXECUTION
