@@ -1,8 +1,5 @@
 import streamlit as st
-from main import Simulator # Import your engine here
-
-# Initialize your engine
-sim = Simulator()
+import main  # Imports your script
 
 st.title("National Resilience Engine")
 
@@ -11,9 +8,13 @@ st.sidebar.header("Crisis Triggers")
 event = st.sidebar.selectbox("Event", ["CCG Quarantine", "UNGA Vote", "DF-26"])
 intensity = st.sidebar.slider("Intensity", 1, 10, 1)
 
-# Logic execution
 if st.sidebar.button("Execute Trigger"):
-    # Call your existing logic from main.py
-    results = sim.trigger_random_event(event, intensity) 
-    st.write(results)
+    # If you have a function named trigger_random_event in main.py, call it directly:
+    main.trigger_random_event(event, intensity) 
+    
+    st.write("Trigger applied.")
     st.success("Simulation Updated")
+    
+    # Show current stats
+    st.write(f"Chip Output: {main.country.chip_output}%")
+    st.write(f"Port Capacity: {main.country.port_capacity}%")
