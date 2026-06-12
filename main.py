@@ -23,7 +23,7 @@ class Asset:
         # ... (your existing init code)
 
 # 4. LOGIC & EXECUTION
-def trigger_random_event():
+　　def trigger_random_event():
     # ... (the event logic we discussed)
 # 4. LOGIC & EXECUTION
 # ---------------------------------------------------
