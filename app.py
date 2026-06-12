@@ -133,7 +133,7 @@ st.title("National Resilience Simulator")
 ev = random.choice(event_pool)
 apply_event(ev)
 update_system()
-    st.write(f"Triggered: {ev.name}")
+st.write(f"Triggered: {ev.name}")
 
 update_system()
 st.write(f"Current GDP Loss: {country.gdp_loss}%")
