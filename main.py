@@ -23,9 +23,17 @@ class Asset:
     # ... (your existing init code)
 
 # 4. LOGIC & EXECUTION
-def trigger_random_event():
-    # Use standard spaces (hit the space bar 4 times) here
-    pass
+def trigger_random_event(event_type, intensity):
+    # This handles the specific crisis logic
+    if event_type == "CCG Quarantine":
+        country.port_capacity -= (intensity * 2)
+    elif event_type == "UNGA Vote":
+        country.gdp_loss += (intensity * 1.5)
+    elif event_type == "DF-26":
+        country.chip_output -= (intensity * 3)
+    
+    # This ensures your simulation state updates
+    return f"Triggered {event_type} at Level {intensity}"
 # 4. LOGIC & EXECUTION
 # ---------------------------------------------------
 
@@ -50,10 +58,17 @@ def apply_event(event):
                     a.status = "Offline"
                     a.resilience = 0
 
-def trigger_random_event():
-    event = random.choice(event_pool)
-    apply_event(event)
-    return event
+def trigger_random_event(event_type, intensity):
+    # This handles the specific crisis logic
+    if event_type == "CCG Quarantine":
+        country.port_capacity -= (intensity * 2)
+    elif event_type == "UNGA Vote":
+        country.gdp_loss += (intensity * 1.5)
+    elif event_type == "DF-26":
+        country.chip_output -= (intensity * 3)
+    
+    # This ensures your simulation state updates
+    return f"Triggered {event_type} at Level {intensity}"
 
 def trigger_specific_event(index):
     event = event_pool[index]
