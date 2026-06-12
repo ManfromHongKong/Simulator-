@@ -130,7 +130,7 @@ def update_system():
 
 # Streamlit Interface
 st.title("National Resilience Simulator")
-    ev = random.choice(event_pool)
+ev = random.choice(event_pool)
     apply_event(ev)
     update_system()
     st.write(f"Triggered: {ev.name}")
