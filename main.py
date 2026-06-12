@@ -20,7 +20,7 @@ event_pool = [
 # 3. CLASS DEFINITIONS (Your Asset class goes here)
 class Asset:
     def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
-        # ... (your existing init code)
+    # ... (your existing init code)
 
 # 4. LOGIC & EXECUTION
 　　def trigger_random_event():
