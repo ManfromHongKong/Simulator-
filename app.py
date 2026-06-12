@@ -138,5 +138,36 @@ if st.button("Trigger Random Event"):
 
 update_system()
 st.write(f"Current GDP Loss: {country.gdp_loss}%")
+# --- DASHBOARD LAYOUT ---
+st.title("National Resilience Simulator")
+
+# 1. TOP: KPI METRICS
+col1, col2, col3 = st.columns(3)
+col1.metric("GDP Loss", f"{country.gdp_loss}%")
+col2.metric("Power Outage", f"{country.population_without_power:,}")
+col3.metric("Chip Output", f"{country.chip_output}%")
+
+# 2. MIDDLE: EVENT CONTROLS
+st.subheader("Crisis Management")
+if st.button("Trigger Random Event"):
+    ev = random.choice(event_pool)
+    apply_event(ev)
+    update_system()
+    st.warning(f"🚨 **Incident Reported:** {ev.name} ({ev.cause})")
+
+# 3. BOTTOM: ASSET HEALTH & DATA
+st.subheader("Infrastructure Integrity")
+# Create a layout for visual bars
+for asset in country.assets:
+    # Color-code the progress bar based on resilience
+    bar_color = "green" if asset.resilience > 50 else "red"
+    st.write(f"{asset.name}")
+    st.progress(asset.resilience / 100)
+
+# Optional: Interactive table for detailed view
+st.subheader("Asset Details")
+st.dataframe(
+    [{"Name": a.name, "Status": a.status, "Resilience": a.resilience} for a in country.assets]
+)
 for a in country.assets:
     st.text(str(a))
