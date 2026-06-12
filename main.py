@@ -23,8 +23,10 @@ class Asset:
     # ... (your existing init code)
 
 # 4. LOGIC & EXECUTION
-　　def trigger_random_event():
-    # ... (the event logic we discussed)
+def trigger_random_event():
+    # Everything here is indented (4 spaces)
+    # This block is what Python was looking for!
+    pass
 # 4. LOGIC & EXECUTION
 # ---------------------------------------------------
 
