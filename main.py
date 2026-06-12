@@ -99,7 +99,7 @@ class Country:
         self.port_capacity = 100
         self.chip_output = 100
         self.gdp_loss = 0
-
+        self.gdp_history = []
     def calculate_gdp(self):
         # Calculate sum of contributions for all operational assets
         # Only assets with status "Operational" contribute to GDP
@@ -317,6 +317,7 @@ def run_day():
     
     # Add this line to update the GDP loss at the end of every day:
     country.gdp_loss = 100 - country.calculate_gdp()
+    country.gdp_history.append(country.gdp_loss)
     
     report()
 
