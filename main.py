@@ -144,10 +144,16 @@ supermarket.add_dependency(substation)
 population_centre.add_dependency(substation)
 
 # ---------------------------------------------------
-# EVENTS
 # ---------------------------------------------------
-TYPHOON = Event("Typhoon", 8)
-MISSILE_STRIKE = Event("Missile Strike", 10)
+# EVENT POOL (The "Causality Engine")
+# ---------------------------------------------------
+event_pool = [
+    Event("Cyber-Sabotage", 3, "Technical Glitch", "Precision"),
+    Event("Rogue Operator Strike", 8, "Rogue PLA Operative", "Precision"),
+    Event("Accidental Escalation", 10, "Political Incident", "Saturation"),
+    Event("Preemptive Strike", 12, "Preemptive Military Strategy", "Saturation"),
+    Event("Demonstrative Strike", 5, "Political Signaling", "Precision")
+]
 
 # ---------------------------------------------------
 # FUNCTIONS
