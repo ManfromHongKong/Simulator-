@@ -24,8 +24,7 @@ class Asset:
 
 # 4. LOGIC & EXECUTION
 def trigger_random_event():
-    # Everything here is indented (4 spaces)
-    # This block is what Python was looking for!
+    # Use standard spaces (hit the space bar 4 times) here
     pass
 # 4. LOGIC & EXECUTION
 # ---------------------------------------------------
