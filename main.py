@@ -1,3 +1,66 @@
+# 1. IMPORTS & DEFINITIONS
+import random
+
+# 2. EVENT SYSTEM (The Causality Engine)
+class Event:
+    def __init__(self, name, severity, cause, scope):
+        self.name = name
+        self.severity = severity
+        self.cause = cause
+        self.scope = scope
+
+event_pool = [
+    Event("Cyber-Sabotage", 3, "Technical Glitch", "Precision"),
+    Event("Rogue Operator Strike", 8, "Rogue PLA Operative", "Precision"),
+    Event("Accidental Escalation", 10, "Political Incident", "Saturation"),
+    Event("Preemptive Strike", 12, "Preemptive Military Strategy", "Saturation"),
+    Event("Demonstrative Strike", 5, "Political Signaling", "Precision")
+]
+
+# 3. CLASS DEFINITIONS (Your Asset class goes here)
+class Asset:
+    def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
+        # ... (your existing init code)
+
+# 4. LOGIC & EXECUTION
+def trigger_random_event():
+    # ... (the event logic we discussed)
+# 4. LOGIC & EXECUTION
+# ---------------------------------------------------
+
+def apply_event(event):
+    """Reduces resilience of assets based on event severity and scope."""
+    if event.scope == "Precision":
+        # Target one random operational asset
+        operational_assets = [a for a in country.assets if a.status == "Operational"]
+        if operational_assets:
+            target = random.choice(operational_assets)
+            target.resilience -= (event.severity * 10)
+            if target.resilience <= 0:
+                target.status = "Offline"
+                target.resilience = 0
+    
+    elif event.scope == "Saturation":
+        # Apply damage to all assets in the power or industry sectors
+        for a in country.assets:
+            if a.sector in ["Power", "Industry"]:
+                a.resilience -= (event.severity * 2)
+                if a.resilience <= 0:
+                    a.status = "Offline"
+                    a.resilience = 0
+
+def trigger_random_event():
+    event = random.choice(event_pool)
+    apply_event(event)
+    return event
+
+def trigger_specific_event(index):
+    event = event_pool[index]
+    apply_event(event)
+    return event
+
+# ... (Any other existing logic like run_day() follows here)
+# ... (the rest of your code)
 class Asset:
     def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
         self.name = name
