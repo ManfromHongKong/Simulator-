@@ -1,3 +1,4 @@
+import main
 import random
 import streamlit as st
 # --- ADD THIS TO THE TOP OF app.py ---
