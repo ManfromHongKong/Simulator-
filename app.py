@@ -1,18 +1,4 @@
-import streamlit as st
-import main
 
-# Everything below this line will now use the logic inside main.py
-st.sidebar.header("Crisis Triggers")
-event = st.sidebar.selectbox("Select Trigger Event", ["CCG Quarantine", "UNGA Vote", "DF-26"])
-intensity = st.sidebar.slider("Select Intensity (1-10)", 1, 10, 1)
-
-if st.sidebar.button("Apply Crisis Scenario"):
-    main.trigger_random_event(event, intensity)
-    st.success(f"Simulation Updated for {event}")
-    st.rerun()
-
-# Everything below this line will now use the logic inside main.py
-st.sidebar.header("Crisis Triggers")
 event = st.sidebar.selectbox("Select Trigger Event", ["CCG Quarantine", "UNGA Vote", "DF-26"])
 intensity = st.sidebar.slider("Select Intensity (1-10)", 1, 10, 1)
 
@@ -153,11 +139,7 @@ st.title("National Resilience Simulator")
 ev = random.choice(event_pool)
 apply_event(ev)
 update_system()
-st.write(f"Triggered: {ev.name}")
 
-update_system()
-st.write(f"Current GDP Loss: {country.gdp_loss}%")
-# --- DASHBOARD LAYOUT ---
 st.title("National Resilience Simulator")
 
 # 1. TOP: KPI METRICS
