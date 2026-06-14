@@ -35,18 +35,13 @@ class Country:
         self.chip_output = 100
         self.port_capacity = 100
         self.gdp_loss = 0
-        self.gdp_history = []
+    def add_asset(self, asset): self.assets.append(asset)
+    def calculate_gdp(self): return sum(a.contribution for a in self.assets if a.status == "Operational")
 
-    def add_asset(self, asset):
-        self.assets.append(asset)
-
-    def calculate_gdp(self):
-        return sum(asset.contribution for asset in self.assets if asset.status == "Operational")
-
-# --- 2. INITIALIZATION (Saves your work across clicks) ---
+# --- 2. INITIALIZATION ---
 if 'country' not in st.session_state:
     c = Country()
-    assets_list = [
+    assets = [
         Asset("Nuclear Plant", "Power", 100, 5, 20), Asset("Coal Plant", "Power", 100, 5, 15),
         Asset("Gas Plant", "Power", 100, 5, 15), Asset("Transformer", "Power", 100, 5, 10),
         Asset("Substation", "Power", 100, 5, 10), Asset("Reservoir", "Water", 100, 5, 5),
@@ -59,60 +54,66 @@ if 'country' not in st.session_state:
         Asset("TSMC Fab", "Industry", 100, 5, 30), Asset("Hospital", "Health", 100, 5, 5),
         Asset("Supermarket", "Food", 100, 5, 5), Asset("Population Centre", "Society", 100, 5, 5)
     ]
-    for a in assets_list: c.add_asset(a)
-    
-    def get_a(name): return next(a for a in c.assets if a.name == name)
+    for a in assets: c.add_asset(a)
+    def get_a(n): return next(a for a in c.assets if a.name == n)
     get_a("Transformer").add_dependency(get_a("Nuclear Plant"))
     get_a("Substation").add_dependency(get_a("Transformer"))
     get_a("TSMC Fab").add_dependency(get_a("Substation"))
     get_a("TSMC Fab").add_dependency(get_a("Pump Station"))
     get_a("Pump Station").add_dependency(get_a("Treatment Plant"))
     get_a("Treatment Plant").add_dependency(get_a("Substation"))
-    
     get_a("TSMC Fab").water_reserve_days = 3
-    
     st.session_state.country = c
-    st.session_state.event_pool = [
+    st.session_state.events = [
         Event("Cyber-Sabotage", 3, "Technical Glitch", "Precision"),
         Event("Rogue Operator Strike", 8, "Rogue PLA Operative", "Precision"),
         Event("Preemptive Strike", 12, "Preemptive Military Strategy", "Saturation")
     ]
 
-# --- 3. CORE LOGIC FUNCTIONS ---
-def update_system():
-    country = st.session_state.country
-    tsmc = next(a for a in country.assets if a.name == "TSMC Fab")
-    for asset in country.assets:
-        if asset.resilience <= 0:
-            asset.status = "Offline"
-            continue
-        if not asset.dependencies:
-            asset.status = "Operational"
-        elif any(dep.status == "Offline" for dep in asset.dependencies):
-            if asset.name == "TSMC Fab" and tsmc.water_reserve_days > 0:
-                tsmc.water_reserve_days -= 1
-                asset.status = "Degraded"
-            else:
-                asset.status = "Offline"
-        else:
-            asset.status = "Operational"
-    country.chip_output = 100 if tsmc.status == "Operational" else (50 if "Degraded" in tsmc.status else 0)
-    country.gdp_loss = 100 - country.calculate_gdp()
+# --- 3. LOGIC ---
+def apply_event(ev):
+    tsmc = next(a for a in st.session_state.country.assets if a.name == "TSMC Fab")
+    for a in st.session_state.country.assets:
+        if ev.scope == "Precision" and a == tsmc: a.resilience -= (ev.severity * 15)
+        elif ev.scope == "Saturation" and a.sector in ["Power", "Industry"]: a.resilience -= (ev.severity * 2)
+        a.resilience = max(0, a.resilience)
+        if a.resilience == 0: a.status = "Offline"
 
-# --- 4. INTERFACE ---
+def update_system():
+    c = st.session_state.country
+    tsmc = next(a for a in c.assets if a.name == "TSMC Fab")
+    for a in c.assets:
+        if a.resilience <= 0: a.status = "Offline"
+        elif not a.dependencies: a.status = "Operational"
+        elif any(d.status == "Offline" for d in a.dependencies):
+            if a.name == "TSMC Fab" and tsmc.water_reserve_days > 0: 
+                tsmc.water_reserve_days -= 1; a.status = "Degraded"
+            else: a.status = "Offline"
+        else: a.status = "Operational"
+    c.chip_output = 100 if tsmc.status == "Operational" else (50 if "Degraded" in tsmc.status else 0)
+    c.gdp_loss = 100 - c.calculate_gdp()
+
+# --- 4. DASHBOARD UI ---
 st.title("National Resilience Simulator")
 
 # Sidebar
 st.sidebar.header("Crisis Triggers")
-selected_event = st.sidebar.selectbox("Select Event", [e.name for e in st.session_state.event_pool], key="evt_sel")
-if st.sidebar.button("Trigger Selection"):
-    ev = next(e for e in st.session_state.event_pool if e.name == selected_event)
-    # Apply your apply_event logic here...
+ev_name = st.sidebar.selectbox("Select Event", [e.name for e in st.session_state.events])
+if st.sidebar.button("Apply Crisis Scenario"):
+    apply_event(next(e for e in st.session_state.events if e.name == ev_name))
     update_system()
-    st.success(f"Triggered: {ev.name}")
 
-# Metrics
+# KPIs
 col1, col2, col3 = st.columns(3)
 col1.metric("GDP Loss", f"{st.session_state.country.gdp_loss}%")
 col2.metric("Power Outage", f"{st.session_state.country.population_without_power:,}")
 col3.metric("Chip Output", f"{st.session_state.country.chip_output}%")
+
+# Integrity
+st.subheader("Infrastructure Integrity")
+for a in st.session_state.country.assets:
+    st.write(f"{a.name} | Status: {a.status}")
+    st.progress(a.resilience / 100)
+
+st.subheader("Asset Details")
+st.dataframe([{"Name": a.name, "Status": a.status, "Resilience": a.resilience} for a in st.session_state.country.assets])
