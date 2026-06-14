@@ -2,7 +2,13 @@
 event = st.sidebar.selectbox("Select Trigger Event", ["CCG Quarantine", "UNGA Vote", "DF-26"])
 intensity = st.sidebar.slider("Select Intensity (1-10)", 1, 10, 1)
 
+# The "if" statement checks if the button was clicked
 if st.sidebar.button("Apply Crisis Scenario"):
+    # Everything indented under this line will ONLY happen when you click the button
+    ev = next(e for e in event_pool if e.name == event_name) # Assuming you have an event_name from a selectbox
+    apply_event(ev)
+    update_system()
+    st.success(f"Simulation Updated for {event_name}")
     main.trigger_random_event(event, intensity)
     st.success(f"Simulation Updated for {event}")
     st.rerun()
