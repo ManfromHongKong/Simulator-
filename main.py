@@ -1,14 +1,6 @@
 # 1. IMPORTS & DEFINITIONS
 import random
 
-# 2. EVENT SYSTEM (The Causality Engine)
-class Event:
-    def __init__(self, name, severity, cause, scope):
-        self.name = name
-        self.severity = severity
-        self.cause = cause
-        self.scope = scope
-
 event_pool = [
     Event("Cyber-Sabotage", 3, "Technical Glitch", "Precision"),
     Event("Rogue Operator Strike", 8, "Rogue PLA Operative", "Precision"),
