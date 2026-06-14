@@ -14,16 +14,7 @@ class Asset:
     def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
     # ... (your existing init code)
 
-# 4. LOGIC & EXECUTION
-def trigger_random_event(event_type, intensity):
-    # This handles the specific crisis logic
-    if event_type == "CCG Quarantine":
-        country.port_capacity -= (intensity * 2)
-    elif event_type == "UNGA Vote":
-        country.gdp_loss += (intensity * 1.5)
-    elif event_type == "DF-26":
-        country.chip_output -= (intensity * 3)
-    
+  
     # This ensures your simulation state updates
     return f"Triggered {event_type} at Level {intensity}"
 # 4. LOGIC & EXECUTION
