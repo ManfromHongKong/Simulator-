@@ -1,6 +1,26 @@
-# 1. IMPORTS & DEFINITIONS
 import random
 
+# 1. CLASS DEFINITIONS
+class Event:
+    def __init__(self, name, severity, cause, scope):
+        self.name = name
+        self.severity = severity
+        self.cause = cause
+        self.scope = scope
+
+class Asset:
+    def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
+        self.name = name
+        self.sector = sector
+        self.resilience = resilience
+        self.repair_days = repair_days
+        self.contribution = contribution
+        self.status = "Operational"
+        self.dependencies = []
+        self.dependents = []
+        # ... (rest of your existing init code)
+
+# 2. EVENT POOL
 event_pool = [
     Event("Cyber-Sabotage", 3, "Technical Glitch", "Precision"),
     Event("Rogue Operator Strike", 8, "Rogue PLA Operative", "Precision"),
@@ -9,21 +29,10 @@ event_pool = [
     Event("Demonstrative Strike", 5, "Political Signaling", "Precision")
 ]
 
-# 3. CLASS DEFINITIONS (Your Asset class goes here)
-class Asset:
-    def __init__(self, name, sector, resilience=100, repair_days=5, contribution=10):
-    # ... (your existing init code)
-
-  
-    # This ensures your simulation state updates
-    return f"Triggered {event_type} at Level {intensity}"
-# 4. LOGIC & EXECUTION
-# ---------------------------------------------------
-
-def apply_event(event):
+# 3. LOGIC & EXECUTION
+def apply_event(event, country):
     """Reduces resilience of assets based on event severity and scope."""
     if event.scope == "Precision":
-        # Target one random operational asset
         operational_assets = [a for a in country.assets if a.status == "Operational"]
         if operational_assets:
             target = random.choice(operational_assets)
@@ -31,6 +40,13 @@ def apply_event(event):
             if target.resilience <= 0:
                 target.status = "Offline"
                 target.resilience = 0
+    elif event.scope == "Saturation":
+        for a in country.assets:
+            if a.sector in ["Power", "Industry"]:
+                a.resilience -= (event.severity * 2)
+                if a.resilience <= 0:
+                    a.status = "Offline"
+                    a.resilience = 0
     
     elif event.scope == "Saturation":
         # Apply damage to all assets in the power or industry sectors
